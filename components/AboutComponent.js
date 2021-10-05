@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import { View, Text, ScrollView } from 'react-native';
-import { Card } from 'react-native-elements';
+import { Text, ScrollView, FlatList } from 'react-native';
+import { Card, ListItem } from 'react-native-elements';
 import { PARTNERS } from '../shared/partners';
-import { FlatList } from 'react-native';
-import { ListItem } from 'react-native-elements';
+
 
 function Mission() {
         return (
@@ -40,11 +39,14 @@ export default class About extends Component {
         return (
             <ScrollView>
                 <Mission/>
-                <FlatList
-                    data={this.state.partners}
-                    renderItem={renderPartner}
-                    keyExtractor={item => item.id.toString()}
-                />
+                <Card title="Community Partners">
+                    <FlatList
+                        data={this.state.partners}
+                        renderItem={renderPartner}
+                        keyExtractor={item => item.id.toString()}
+                    />
+                </Card>
+                
             </ScrollView>
         )
     }
