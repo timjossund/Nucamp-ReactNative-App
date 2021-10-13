@@ -8,7 +8,22 @@ export const comments = (state = { errMess: null, comments: []}, action) => {
         case ActionTypes.COMMENTS_FAILED:
             return {...state, errMess: action.payload};
 
+        case ActionTypes.ADD_COMMENT:
+            const newComment = action.payload;
+            newComment.id = state.comments.length;
+            //state.comments.concat(newComment);
+            //return {...state, errMess: null, comments: state.comments};
+            const newComments = [...state.comments, newComment]
+            return { ...state, errMess: null, comments: newComments };
+
         default:
             return state;
     }
 };
+
+
+//case ActionTypes.ADD_COMMENT:
+  //    const newComment = action.payload
+    //  newComment.id = state.comments.length
+      //const newComments = [...state.comments, newComment]
+      //return { ...state, errMess: null, comments: newComments };

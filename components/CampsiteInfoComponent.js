@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Text, View, ScrollView, FlatList, 
     Modal, Button, StyleSheet } from 'react-native';
 import { Card, Icon, Rating, Input } from 'react-native-elements';
-import { postFavorite } from '../redux/ActionCreators';
+import { postFavorite, postComment } from '../redux/ActionCreators';
 import { connect } from 'react-redux';
 import { baseUrl } from '../shared/baseUrl';
 
@@ -15,7 +15,8 @@ const mapStateToProps = state =>  {
 };
 
 const mapDispatchToProps = {
-    postFavorite: campsiteId => (postFavorite(campsiteId))
+    postFavorite: campsiteId => (postFavorite(campsiteId)),
+    postComment: (campsiteId, rating, author, text) => (postComment(campsiteId, rating, author, text))
 };
 
 function RenderComments({comments}) {
@@ -24,7 +25,12 @@ function RenderComments({comments}) {
         return (
             <View style={{margin: 10}}>
                 <Text style={{fontSize: 14}}>{item.text}</Text>
-                <Rating style={{fontSize: 12}}>{item.rating} Stars</Rating>
+                <Rating 
+                    style={{alignItems: 'flex-start', paddingVertical: '5%'}}
+                    startingValue={item.rating}
+                    imageSize={10}
+                    readonly
+                />
                 <Text style={{fontSize: 12}}>{`-- ${item.author}, ${item.date}`}</Text>
             </View>
         )
@@ -100,8 +106,9 @@ class CampsiteInfo extends Component {
     }
 
     handleComment(campsiteId) {
-        console.log(this.state.JSON.stringify);
-        toggleModal();
+        const { rating, author, text } = this.state
+        this.props.postComment(campsiteId, rating, author, text);
+        this.toggleModal();
     }
 
     resetForm() {
@@ -138,24 +145,24 @@ class CampsiteInfo extends Component {
                     <View style={styles.modal}>
                         <Rating 
                             showRating
-                            startingValue={5}
+                            startingValue={this.state.rating}
                             imageSize={40}
                             onFinishRating={rating => this.setState({rating: rating})}
                             style={{paddingVertical: 10}}
                         />
                         <Input
                             placeholder='Author'
-                            leftIcon={'user-o'}
+                            leftIcon={{type:'font-awesome', name: 'user-o'}}
                             leftIconContainerStyle={{paddingRight: 10}}
                             onChangeText={author => this.setState({author: author})}
                             value={this.state.author}
                         />
                         <Input 
                             placeholder='Comment'
-                            leftIcon={'comment-o'}
+                            leftIcon={{type:'font-awesome', name: 'comment-o'}}
                             leftIconContainerStyle={{paddingRight: 10}}
                             onChangeText={text => this.setState({text: text})}
-                            value={this.state.comment}
+                            value={this.state.text}
                         />
                         <View style={{margin: 10}}>
                             <Button
